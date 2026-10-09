@@ -38,11 +38,14 @@ impl MissionBoard {
         if self.missions.contains_key(id) {
             return Err(MissionError::DuplicateMission);
         }
-        self.missions.insert(id.into(), Mission {
-            id: id.into(),
-            title: title.into(),
-            status: Status::Open,
-        });
+        self.missions.insert(
+            id.into(),
+            Mission {
+                id: id.into(),
+                title: title.into(),
+                status: Status::Open,
+            },
+        );
         Ok(())
     }
 
@@ -54,7 +57,9 @@ impl MissionBoard {
         if mission.status != Status::Open {
             return Err(MissionError::InvalidTransition);
         }
-        mission.status = Status::Claimed { actor: actor.into() };
+        mission.status = Status::Claimed {
+            actor: actor.into(),
+        };
         Ok(())
     }
 
@@ -105,7 +110,10 @@ mod tests {
         board.claim("m1", "agent-a").unwrap();
         board.submit("m1", "agent-a", "evidence-1").unwrap();
         board.approve("m1").unwrap();
-        assert!(matches!(board.get("m1").unwrap().status, Status::Completed { .. }));
+        assert!(matches!(
+            board.get("m1").unwrap().status,
+            Status::Completed { .. }
+        ));
     }
 
     #[test]
